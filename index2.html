@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soft Toast Notification</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn {
+      from {
+        transform: translateY(20%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    @keyframes fadeOut {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(20%);
+        opacity: 0;
+      }
+    }
+    .toast-show {
+      animation: fadeIn 0.7s ease forwards;
+    }
+    .toast-hide {
+      animation: fadeOut 0.7s ease forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+
+  <!-- Buttons -->
+  <div class="space-x-4">
+    <button 
+      class="bg-gradient-to-r from-green-400 to-green-500 text-white px-5 py-2 rounded-full shadow-lg hover:from-green-500 hover:to-green-600 focus:outline-none"
+      onclick="showToast('success', 'Data berhasil disimpan!')"
+    >
+      Show Success
+    </button>
+    <button 
+      class="bg-gradient-to-r from-red-400 to-red-500 text-white px-5 py-2 rounded-full shadow-lg hover:from-red-500 hover:to-red-600 focus:outline-none"
+      onclick="showToast('error', 'Terjadi kesalahan!')"
+    >
+      Show Error
+    </button>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-5 right-5 space-y-4 z-50"></div>
+
+  <script>
+    function showToast(type, message) {
+      const toastContainer = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      // Toast Design
+      toast.className = `
+        toast-show flex items-center space-x-3 px-5 py-3 rounded-lg shadow-lg 
+        text-white text-sm ${type === 'success' ? 'bg-green-400' : 'bg-red-400'}
+      `;
+      
+      // Add Icon
+      const icon = document.createElement('span');
+      icon.innerHTML = type === 'success' 
+        ? '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+        : '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+      
+      // Add Text
+      const text = document.createElement('span');
+      text.textContent = message;
+
+      // Append to Toast
+      toast.appendChild(icon);
+      toast.appendChild(text);
+
+      // Add Toast to Container
+      toastContainer.appendChild(toast);
+
+      // Remove after timeout
+      setTimeout(() => {
+        toast.classList.replace('toast-show', 'toast-hide');
+        toast.addEventListener('animationend', () => toast.remove());
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
